@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;ARM64;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="profile.wprp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="profile.wprp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.EventTracing.Processing.All" Version="1.12.10" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y &quot;$(SolutionDir)$(Platform)\$(Configuration)\ScreenRecorder.exe&quot; &quot;$(TargetDir)&quot;&#xD;&#xA;xcopy /y &quot;$(SolutionDir)LaunchDetectorScript\LaunchDetectorScript.exe&quot; &quot;$(TargetDir)&quot;" />
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="powershell.exe -File &quot;$(SolutionDir)LaunchDetectorScript\Build-Project.ps1&quot;&#xD;&#xA;" />
+  </Target>
+
+</Project>

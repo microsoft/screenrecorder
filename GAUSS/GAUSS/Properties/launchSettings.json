@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GAUSS": {
+      "commandName": "Project",
+      "commandLineArgs": "--start"
+    }
+  }
+}
