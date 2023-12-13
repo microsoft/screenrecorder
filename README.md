@@ -1,11 +1,13 @@
 # GAUSS
 
 ## Table of Contents
-- [Usage](#usage)
-- [Capturing ETW Events](#capturing-etw-events)
-- [Example Capture](#example-capture)
+- [Screen Recorder](#screen-recorder)
+  - [Usage](#usage)
+  - [Capturing ETW Events](#capturing-etw-events)
+  - [Example Capture](#example-capture)
 
-## Usage
+## Screen Recorder
+### Usage
 The tool allows you to start and stop recording from the command line. When a recording is started, the framerate, monitor, and buffer size can be specified. When a recording is stopped, a folder must be provided in which to store the screenshots.
 
     screenrecorder.exe -start ...        Starts screen recording.
@@ -25,12 +27,12 @@ The tool allows you to start and stop recording from the command line. When a re
 
     screenrecorder.exe -help ...         Prints usage information.
 
-## Capturing ETW Events
+### Capturing ETW Events
 An ETW event is emitted by the tool every time it receives a frame from DirectX. The event for each frame contains the filename to be used if the frame is saved to disk, allowing for direct correlation between each event and screenshot. The tool does not receive frames from DirectX unless there has been a change in the screen, so desired framerates may not be exact.
 
 To capture the ETW events, you must use a ETW tracing tool like WPR and watch for events from the following provider guid: fe8fc3d0-1e6a-42f2-be28-9f8a0fcf7b04.
 
-## Example Capture
+### Example Capture
 
 Create a WPR profile with the following provider and collectors defined:
 
