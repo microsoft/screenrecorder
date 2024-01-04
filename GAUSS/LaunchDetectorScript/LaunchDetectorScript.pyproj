@@ -25,6 +25,7 @@
     <Compile Include="Build-Project.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LaunchDetectorScript.spec" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

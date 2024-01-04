@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y &quot;$(SolutionDir)$(Platform)\$(Configuration)\ScreenRecorder.exe&quot; &quot;$(TargetDir)&quot;&#xD;&#xA;xcopy /y &quot;$(SolutionDir)LaunchDetectorScript\LaunchDetectorScript.exe&quot; &quot;$(TargetDir)&quot;" />
+    <Exec Command="xcopy /y &quot;$(SolutionDir)$(Platform)\$(Configuration)\ScreenRecorder.exe&quot; &quot;$(TargetDir)&quot;&#xD;&#xA;xcopy /y &quot;$(SolutionDir)LaunchDetectorScript\dist\LaunchDetectorScript.exe&quot; &quot;$(TargetDir)&quot;" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
