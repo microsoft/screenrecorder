@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>LaunchDetectorScript</Name>
     <RootNamespace>LaunchDetectorScript</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
