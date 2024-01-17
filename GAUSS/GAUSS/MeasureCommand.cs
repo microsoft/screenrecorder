@@ -2,6 +2,7 @@
 using Microsoft.Windows.EventTracing.Cpu;
 using Microsoft.Windows.EventTracing.Events;
 using Microsoft.Windows.EventTracing.Processes;
+using System.Text.RegularExpressions;
 
 namespace GAUSS
 {
@@ -163,12 +164,17 @@ namespace GAUSS
                 lastClickTimestamp = Timestamp.Zero;
             }
 
-            if (Utilities.RunExecutable(LaunchDetectorScriptExecutable, ScreenshotsPath, out string settledScreenshotName) != 0)
+            if (Utilities.RunExecutable(LaunchDetectorScriptExecutable, ScreenshotsPath, out string launchDetectorScriptOutput) != 0)
             {
                 Console.WriteLine($"LaunchDetectorScript failed.");
 
                 return;
             }
+
+            string pattern = @"[a-zA-Z0-9_-]*\.jpg";
+
+            Match match = Regex.Match(launchDetectorScriptOutput, pattern);
+            string settledScreenshotName = match.Value;
 
             Timestamp settledTimestamp;
 
