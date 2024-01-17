@@ -1,10 +1,19 @@
 # GAUSS
 
 ## Table of Contents
+- [Dev Requirements](#dev-requirements)
 - [Screen Recorder](#screen-recorder)
   - [Usage](#usage)
   - [Capturing ETW Events](#capturing-etw-events)
   - [Example Capture](#example-capture)
+
+## Dev Requirements
+- Install Git
+- Install Python 11
+  - Install modules in requirements.txt 
+- Visual Studio 2022
+  - Install Python development, .NET desktop development, and Desktop development with C++ workloads
+  - Install MSVC v143 - VS 2022 C++ ARM64/ARM64EC build tools (v14.38-17.8) component or newer to compile for ARM
 
 ## Screen Recorder
 ### Usage
