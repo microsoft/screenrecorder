@@ -52,7 +52,7 @@ bool TryCreateRecordingProcess()
         return false;
     }
 
-    std::wstring cmdLine = std::wstring(szPath) + L" -newserver";
+    std::wstring cmdLine = L"\"" + std::wstring(szPath) + L"\" -newserver"; // Wrap szPath in quotes
     STARTUPINFO info = { sizeof(info) };
     info.dwFlags = STARTF_USESTDHANDLES;
     info.hStdOutput = NULL;
