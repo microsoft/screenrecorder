@@ -1,33 +1,69 @@
-# Project
+# GAUSS
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+## Table of Contents
+- [Dev Requirements](#dev-requirements)
+- [Screen Recorder](#screen-recorder)
+  - [Usage](#usage)
+  - [Capturing ETW Events](#capturing-etw-events)
+  - [Example Capture](#example-capture)
 
-As the maintainer of this project, please make a few updates:
+## Dev Requirements
+- Install Git
+- Install Python 11
+  - Install modules in requirements.txt 
+- Visual Studio 2022
+  - Install Python development, .NET desktop development, and Desktop development with C++ workloads
+  - Install MSVC v143 - VS 2022 C++ ARM64/ARM64EC build tools (v14.38-17.8) component or newer to compile for ARM
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+## Screen Recorder
+### Usage
+The tool allows you to start and stop recording from the command line. When a recording is started, the framerate, monitor, and buffer size can be specified. When a recording is stopped, a folder must be provided in which to store the screenshots.
 
-## Contributing
+    screenrecorder.exe -start ...        Starts screen recording.
+        Usage:  screenrecorder.exe -start [-framerate <framerate>] [-monitor <monitor index>] [-framebuffer -mb <# of frames>] [-monitor <monitor # to record>]
+        Ex>     screenrecorder.exe -start -framerate 10
+        Ex>     screenrecorder.exe -start -framerate 1 -monitor 0 -framebuffer -mb 100
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+        -framerate      Specifies the rate at which screenshots will be taken, in frames per second.
+        -monitor        Specifies the monitor to record, as an index. The highest index will record all monitors.
+        -framebuffer    Specifies the size of the circular memory buffer in which to store screenshots, in number of screenshots. Adding the -mb flag specifies the size of the buffer in megabytes.
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+    screenrecorder.exe -stop ...         Stops screen recording saves all screenshots in buffer to a folder.
+        Usage:  screenrecorder.exe -stop <recording folder>
+        Ex>     screenrecorder.exe -stop "D:\screenrecorder"
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+    screenrecorder.exe -cancel ...       Cancels the screen recording.
 
-## Trademarks
+    screenrecorder.exe -help ...         Prints usage information.
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+### Capturing ETW Events
+An ETW event is emitted by the tool every time it receives a frame from DirectX. The event for each frame contains the filename to be used if the frame is saved to disk, allowing for direct correlation between each event and screenshot. The tool does not receive frames from DirectX unless there has been a change in the screen, so desired framerates may not be exact.
+
+To capture the ETW events, you must use a ETW tracing tool like WPR and watch for events from the following provider guid: fe8fc3d0-1e6a-42f2-be28-9f8a0fcf7b04.
+
+### Example Capture
+
+Create a WPR profile with the following provider and collectors defined:
+
+    ...
+    <EventProvider Id="screenrecorder" Name="fe8fc3d0-1e6a-42f2-be28-9f8a0fcf7b04">
+	  </EventProvider>
+    ...
+    <EventCollectorId Value="Standard_EventCollector_Misc">
+      <EventProviders>
+        <EventProviderId Value="screenrecorder"/>
+      </EventProviders>
+    </EventCollectorId>
+    ...
+
+Take an ETW trace using WPR while you use the tool to capture some scenario.
+
+    wpr -start profile.wprp
+    ScreenRecorder.exe -start
+
+    ... excercise some scenario of interest ...
+
+    ScreenRecorder.exe -stop "D:\"
+    wpr -stop trace.etl
+
+Now opening the trace in WPA, we can see the events produced by the tool in the Generic Events table under the ScreenRecorder provider. Each event contains the filename for the screenshot.

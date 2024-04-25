@@ -1,0 +1,1327 @@
+<?xml version="1.0" standalone='yes'?>
+<!--
+
+    This profile is meant for general-purpose tracing of responsiveness and the input stack.
+
+-->
+<WindowsPerformanceRecorder
+  Version="1.0"
+  Author="ivberg"
+  Team="FUN PH"
+  Comments="Responsiveness WPR profile"
+  Company="Microsoft Corporation"
+  Copyright="Microsoft Corporation"
+  Tag="">
+  <Profiles>
+
+    <!-- System Collectors -->
+
+    <SystemCollector Id="Standard_SystemCollector" Name="Standard System Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="2" PercentageOfTotalMemory="true" MaximumBufferSpace="200" />
+      <StackCaching BucketCount="256" CacheSize="3072"/>
+    </SystemCollector>
+
+    <SystemCollector Id="Perf_SystemCollector" Name="Standard System Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="2.5" PercentageOfTotalMemory="true" MaximumBufferSpace="250" />
+      <StackCaching BucketCount="256" CacheSize="3072"/>
+    </SystemCollector>
+
+    <!-- NOTE: UIF is only allowed the smaller of 7% / 224MB across all collectors.
+         All UIF_* collectors (system and event) must add up to these limits to allow OneTrace to run as well. -->
+    <SystemCollector Id="UIF_SystemCollector" Name="UIF System Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1" PercentageOfTotalMemory="true" MaximumBufferSpace="37"/>
+    </SystemCollector>
+    <SystemCollector Id="UIFPerf_SystemCollector" Name="UIFPerf System Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="2" PercentageOfTotalMemory="true" MaximumBufferSpace="56"/>
+      <StackCaching BucketCount="256" CacheSize="3072"/>
+    </SystemCollector>
+
+    <!-- Event collectors -->
+
+    <EventCollector Id="Standard_EventCollector_Core" Name="Core Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1.5" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+    <EventCollector Id="Standard_EventCollector_HID" Name="HID Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="0.5" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+    <EventCollector Id="Standard_EventCollector_Transport" Name="Transport Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="0.5" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+    <EventCollector Id="Standard_EventCollector_Foundation" Name="Foundation Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+    <EventCollector Id="Standard_EventCollector_Platform" Name="Platform Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+    <EventCollector Id="Standard_EventCollector_Misc" Name="An Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+
+    <!-- NOTE: UIF is only allowed the smaller of 7% / 224MB across all collectors.
+         All UIF_* collectors (system and event) must add up to these limits to allow OneTrace to run as well.. -->
+    <EventCollector Id="UIF_EventCollector_Core" Name="UIF Core Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1" PercentageOfTotalMemory="true" MaximumBufferSpace="74"/>
+    </EventCollector>
+    <EventCollector Id="UIF_EventCollector_PlatformAndFoundation" Name="UIF Platform Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1.5" PercentageOfTotalMemory="true" MaximumBufferSpace="74"/>
+    </EventCollector>
+    <EventCollector Id="UIFPerf_EventCollector" Name="UIFPerf Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="1.5" PercentageOfTotalMemory="true" MaximumBufferSpace="112"/>
+    </EventCollector>
+
+    <EventCollector Id="Perf_EventCollector" Name="Perf Event Collector" HostGuestCorrelation="true">
+      <BufferSize Value="1024"/>
+      <Buffers Value="4" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+
+
+    <!-- System providers -->
+
+    <SystemProvider Id="UIF_SystemProvider">
+      <Keywords>
+        <Keyword Value="CpuConfig"/>
+        <Keyword Value="DPC"/>
+        <Keyword Value="WDFDPC"/>
+        <Keyword Value="HardFaults"/>
+        <Keyword Value="Interrupt"/>
+        <Keyword Value="WDFInterrupt"/>
+        <Keyword Value="Loader"/>
+        <Keyword Value="ProcessThread"/>
+        <Keyword Value="DiskIO"/>
+        <Keyword Value="CSwitch"/>
+        <Keyword Value="ReadyThread"/>
+      </Keywords>
+    </SystemProvider>
+
+    <SystemProvider Id="UIFPerf_SystemProvider">
+      <Keywords>
+        <Keyword Value="CpuConfig"/>
+        <Keyword Value="DPC"/>
+        <Keyword Value="WDFDPC"/>
+        <Keyword Value="HardFaults"/>
+        <Keyword Value="Interrupt"/>
+        <Keyword Value="WDFInterrupt"/>
+        <Keyword Value="Loader"/>
+        <Keyword Value="ProcessThread"/>
+        <Keyword Value="DiskIO"/>
+        <Keyword Value="CSwitch"/>
+        <Keyword Value="ReadyThread"/>
+      </Keywords>
+      <Stacks>
+        <Stack Value="CSwitch"/>
+        <Stack Value="ReadyThread"/>
+      </Stacks>
+    </SystemProvider>
+    
+    <SystemProvider Id="WinResp_SystemProvider">
+      <Keywords>
+        <Keyword Value="Power"/>
+        <Keyword Value="VAMap"/>
+        <Keyword Value="CpuConfig"/>
+        <Keyword Value="DPC"/>
+        <Keyword Value="WDFDPC"/>
+        <Keyword Value="DiskIO"/>
+        <Keyword Value="HardFaults"/>
+        <Keyword Value="Interrupt"/>
+        <Keyword Value="WDFInterrupt"/>
+        <Keyword Value="Loader"/>
+        <Keyword Value="ProcessThread"/>
+        <Keyword Value="CSwitch"/>
+        <Keyword Value="ReadyThread"/>
+        <Keyword Value="SampledProfile"/>
+        <CustomKeyword Value="0x20000200"/>
+        <CustomKeyword Value="0x8"/>
+        <CustomKeyword Value="0x20002000"/>
+        <CustomKeyword Value="0x20001000"/>
+    </Keywords>
+      <Stacks>
+        <Stack Value="CSwitch"/>
+        <Stack Value="SampledProfile"/>
+        <Stack Value="ReadyThread"/>
+        <Stack Value="ThreadCreate"/>
+        <Stack Value="ProcessCreate"/>
+        <Stack Value="ProcessDelete"/>
+        <Stack Value="ThreadDelete"/>
+        <CustomStack Value="0x535"/>
+      </Stacks>
+    </SystemProvider>
+    <HardwareCounter Id="HardwareCounter_General_Mobile_+_CPI" Strict="false">
+      <Counters>
+        <Counter Value="TotalCycles"/>
+        <Counter Value="InstructionRetired"/>
+      </Counters>
+      <Events>
+        <Event Value="CSwitch"/>
+      </Events>
+    </HardwareCounter>
+
+    <!-- Event providers -->
+
+    <!-- Low noise core os providers-->
+
+    <!-- Base UIF provider. Should keep for repro mode, but not required for non-repro mode scenarios -->
+    <EventProvider Name="C73DBAB0-5395-4D87-8134-290D28AC0E01" Id="Microsoft.Windows.Fundamentals.UserInitiatedFeedback" Level="5">
+      <Keywords>
+        <Keyword Value="0x1"/>
+      </Keywords>
+    </EventProvider>
+    <!-- TAEF logging -->
+    <EventProvider Name="40C4DF8B-00A9-5159-62BC-9BBC5EE78A29" Id="Microsoft.Windows.TestExecution.WexLogger"/>
+    <!-- InputCore TraceLogging (win32kbase.sys, win32kmin.sys, win32kfull.sys, dwmcore.dll, ism.dll, minuser.dll, etc.) -->
+    <EventProvider Name="5FB75EAC-9F0B-550C-339F-FC21FDE966CD" Id="Microsoft.Windows.InputCore.TraceLogging" NonPagedMemory="true" Level="5">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="5FB75EAC-9F0B-550C-339F-FC21FDE966CD" Id="Microsoft.Windows.InputCore.TraceLogging.Perf" NonPagedMemory="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="5FB75EAC-9F0B-550C-339F-FC21FDE966CD" Id="Microsoft.Windows.InputCore.TraceLogging.Stacks" NonPagedMemory="true" Stack="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="5FB75EAC-9F0B-550C-339F-FC21FDE966CD" Id="Microsoft.Windows.InputCore.TraceLogging.UIF" NonPagedMemory="true" Level="4">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <!-- InputCore Manifested (win32kbase.sys, win32kmin.sys, win32kfull.sys, dwmcore.dll, ism.dll, minuser.dll, etc.) -->
+    <!-- NOTE: this provider isn't present yet - it's declared here to reduce churn when it's added -->
+    <EventProvider Name="A90E365C-CC39-4B68-B943-DCD45C83BB52" Id="Microsoft.Windows.InputCore.Manifested" NonPagedMemory="true" Level="5">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="A90E365C-CC39-4B68-B943-DCD45C83BB52" Id="Microsoft.Windows.InputCore.Manifested.Perf" NonPagedMemory="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="A90E365C-CC39-4B68-B943-DCD45C83BB52" Id="Microsoft.Windows.InputCore.Manifested.Stacks" NonPagedMemory="true" Stack="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="A90E365C-CC39-4B68-B943-DCD45C83BB52" Id="Microsoft.Windows.InputCore.Manifested.UIF" NonPagedMemory="true" Level="4">
+      <Keywords>
+        <Keyword      Value="0x1"/>
+        <!-- <Keyword Value="0x1"/> Overview -->
+      </Keywords>
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+
+    <!-- HID bus and class driver providers -->
+
+    <!-- HidClass WPP (hidclass.sys) -->
+    <EventProvider Name="47C779CD-4EFD-49D7-9B10-9F16E5C25D06" Id="Microsoft.Windows.HID.HidClass" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- HID I2C devices (hidi2c.sys) -->
+    <EventProvider Name="E742C27D-29B1-4E4B-94EE-074D3AD72836" Id="Microsoft.Windows.HID.I2C" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- HID SPI devices (hidspi.sys) -->
+    <EventProvider Name="0A6B3BB2-3504-49C1-81D0-6A4B88B96427" Id="Microsoft.Windows.HID.SPI" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- USB HID devices (hidusb.sys) -->
+    <EventProvider Name="896F2806-9D0E-4D5F-AA25-7ACDBF4EAF2C" Id="Microsoft.Windows.HID.USB" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- HID Bluetooth devices (hidbth.sys) -->
+    <EventProvider Name="07699FF6-D2C0-4323-B927-2C53442ED29B" Id="Microsoft.Windows.HID.BTH" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- HID GATT / Bluetooth LE devices (Microsoft.Bluetooth.Profiles.HidOverGatt.dll) -->
+    <EventProvider Name="0107CF95-313A-473E-9078-E73CD932F2FE" Id="Microsoft.Windows.HID.GATT">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Keyboard HID driver (kbdhid.sys) -->
+    <EventProvider Name="B41B0A56-4483-48EF-A772-0B007CBEA8C6" Id="Microsoft.Windows.HID.kbd" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Keyboard class driver (kbdclass.sys) -->
+    <EventProvider Name="09281F1F-F66E-485A-99A2-91638F782C49" Id="Microsoft.Windows.HID.kbdclass" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Mouse HID driver (mouhid.sys) -->
+    <EventProvider Name="BBBC2565-8272-486E-B5E5-2BC4630374BA" Id="Microsoft.Windows.HID.mou" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Mouse class driver (mouclass.sys) -->
+    <EventProvider Name="FC8DF8FD-D105-40A9-AF75-2EEC294ADF8D" Id="Microsoft.Windows.HID.mouclass" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Input Configuration Filter Driver (mtconfig.sys) -->
+    <EventProvider Name="46BCE2CC-ED23-41DF-BE49-6BB8EC04CF70" Id="Microsoft.Windows.Drivers.MtConfig" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+
+    <!-- Device low level transport providers -->
+
+    <!-- Button Devices (buttonconverter.sys) -->
+    <EventProvider Name="4B2862FE-F8BE-41FF-984A-0AF845F78E86" Id="Microsoft.Windows.HID.Buttonconverter" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- HID Interrupts (hidinterrupt.sys) -->
+    <EventProvider Name="78396E52-9753-4D63-8CF5-A936B4989FF2" Id="Microsoft.Windows.HID.HidInterrupt" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- GPIO HID devices (msgpiowin32.sys) -->
+    <EventProvider Name="5A81715A-84C0-4DEF-AE38-EDDE40DF5B3A" Id="Microsoft.Windows.HID.GPIO" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Virtual HID Framework (vhf.sys) -->
+    <EventProvider Name="51B2172F-205D-40C1-9A30-ED090FF72E6C" Id="Microsoft.Windows.HID.VHF" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- I2C Transport Driver (spbcx.sys) -->
+    <EventProvider Name="E6086B4D-AEFF-472B-BDA7-EEC662AFBF11" Id="Microsoft.Windows.HID.SpbCx" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- USB Transport Driver (usbhub3.sys) -->
+    <EventProvider Name="6E6CC2C5-8110-490E-9905-9F2ED700E455" Id="Microsoft.Windows.USB.UsbHub3" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- USB Transport Driver (ucx01000.sys) -->
+    <EventProvider Name="6FB6E467-9ED4-4B73-8C22-70B97E22C7D9" Id="Microsoft.Windows.USB.ucx01000" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- USB Transport Driver (usbxhci.sys) -->
+    <EventProvider Name="9F7711DD-29AD-C1EE-1B1B-B52A0118A54C" Id="Microsoft.Windows.USB.XHCI" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Composite USB Transport Driver (usbccgp.sys) -->
+    <EventProvider Name="BC6C9364-FC67-42C5-ACF7-ABED3B12ECC6" Id="Microsoft.Windows.USB.CCGP" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Older USB EHCI controllers (usbhub.sys) -->
+    <EventProvider Name="B10D03B8-E1F6-47F5-AFC2-0FA0779B8188" Id="Microsoft.Windows.USB.Hub" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Older USB EHCI controllers (usbport.sys) -->
+    <EventProvider Name="D75AEDBE-CFCD-42B9-94AB-F47B224245DD" Id="Microsoft.Windows.USB.Port" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- PS/2 Transport Driver (i8042prt.sys) -->
+    <EventProvider Name="7FFB8EB8-2C86-45D6-A7C5-C023D9C070C1" Id="Microsoft.Windows.Drivers.I8042prt" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- GPIO Interrupt Based Buttons (msgpioclx.sys) -->
+    <EventProvider Name="8D83BA5C-E85E-4859-B18E-314BA4475A12" Id="Microsoft.Windows.Drivers.msgpioclx" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Bluetooth Transport Driver (bthport.sys) -->
+    <EventProvider Name="D88ACE07-CAC0-11D8-A4C6-000D560BCBA5" Id="Microsoft.Windows.Drivers.bthport" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Device Problems TraceLogging (energy.dll) -->
+    <EventProvider Name="CDEF60FA-5777-4B02-9980-1E2C0DF22635" Id="Microsoft.Windows.Power.DeviceProblems"/>
+
+    <!-- Win32k input stack foundation providers -->
+
+    <!-- RIM WPP (RS1) (win32kbase.sys) -->
+    <EventProvider Name="3374F1C0-597F-4AA1-B2C2-12789D9C8C3F" Id="Microsoft.Windows.RIM_RS1.WPP" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Win32kBase Input TraceLogging (win32kbase.sys) -->
+    <EventProvider Name="7E6B69B9-2AEC-4FB3-9426-69A0F2B61A86" Id="Microsoft.Windows.Win32kBase.Input" NonPagedMemory="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <!-- Win32kBase WPP (win32kbase.sys) -->
+    <EventProvider Name="0F81EC00-9E52-48E6-B899-EB3BBEEDE741" Id="Microsoft.Windows.Win32kBase.WPP" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Win32kMin WPP (win32kmin.sys) -->
+    <EventProvider Name="03914E49-F3DD-40B9-BB7F-9445BF46D43E" Id="Microsoft.Windows.Win32kMin.WPP" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Win32kFull WPP (win32kfull.sys) -->
+    <EventProvider Name="335D5E04-5638-4E58-AA36-7ED1CFE76FD6" Id="Microsoft.Windows.Win32kFull.WPP" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Win32kNs WPP (win32kns.sys) -->
+    <EventProvider Name="9C648335-6987-470C-B588-3DE7A6A1FDAC" Id="Microsoft.Windows.Win32kNs.WPP" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- Win32k Telemetry TraceLogging (win32kbase.sys, win32kfull.sys) -->
+    <EventProvider Name="487D6E37-1B9D-46D3-A8FD-54CE8BDF8A53" Id="Microsoft.Windows.Win32k.TraceLogging" NonPagedMemory="true"/>
+    <!-- Win32k Manifested (win32kbase.sys, win32kmin.sys, win32kfull.sys) -->
+    <EventProvider Name="8C416C79-D49B-4F01-A467-E56D3AA8234C" Id="Microsoft-Windows-Win32k" NonPagedMemory="true" EventKey="true">
+      <Keywords>
+        <Keyword      Value="0xA045E6A000"/>
+        <!-- <Keyword       Value="0x2000"/> Focus -->
+        <!-- <Keyword       Value="0x8000"/> win32Power -->
+        <!-- <Keyword      Value="0x20000"/> UserActivity -->
+        <!-- <Keyword      Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword     Value="0x200000"/> ThreadInfo -->
+        <!-- <Keyword     Value="0x400000"/> MessagePump -->
+        <!-- <Keyword     Value="0x800000"/> MessagePumpInternalAndInput -->
+        <!-- <Keyword    Value="0x1000000"/> TouchInput -->
+        <!-- <Keyword   Value="0x04000000"/> PointerInput -->
+        <!-- <Keyword   Value="0x40000000"/> ComponentHosting -->
+        <!-- <Keyword Value="0x2000000000"/> UserCrit telemetry -->
+        <!-- <Keyword Value="0x8000000000"/> DCompInput (RS5) -->
+      </Keywords>
+      <CaptureStateOnStart>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnStart>
+      <CaptureStateOnSave>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="8C416C79-D49B-4F01-A467-E56D3AA8234C" Id="Microsoft.Windows.Win32k.Stacks" NonPagedMemory="true" Stack="true">
+      <Keywords>
+        <Keyword      Value="0xA045A6A000"/>
+        <!-- <Keyword       Value="0x2000"/> Focus -->
+        <!-- <Keyword       Value="0x8000"/> win32Power -->
+        <!-- <Keyword      Value="0x20000"/> UserActivity -->
+        <!-- <Keyword      Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword     Value="0x200000"/> ThreadInfo -->
+        <!-- <Keyword     Value="0x800000"/> MessagePumpInternalAndInput -->
+        <!-- <Keyword    Value="0x1000000"/> TouchInput -->
+        <!-- <Keyword   Value="0x04000000"/> PointerInput -->
+        <!-- <Keyword   Value="0x40000000"/> ComponentHosting -->
+        <!-- <Keyword Value="0x2000000000"/> UserCrit telemetry -->
+        <!-- <Keyword Value="0x8000000000"/> DCompInput (RS5) -->
+      </Keywords>
+      <CaptureStateOnStart>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnStart>
+      <CaptureStateOnSave>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="8C416C79-D49B-4F01-A467-E56D3AA8234C" Id="Microsoft.Windows.Win32k.UIF" NonPagedMemory="true">
+      <Keywords>
+        <Keyword      Value="0xA04526A000"/>
+        <!-- <Keyword       Value="0x2000"/> Focus -->
+        <!-- <Keyword       Value="0x8000"/> win32Power -->
+        <!-- <Keyword      Value="0x20000"/> UserActivity -->
+        <!-- <Keyword      Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword     Value="0x200000"/> ThreadInfo -->
+        <!-- <Keyword    Value="0x1000000"/> TouchInput -->
+        <!-- <Keyword   Value="0x04000000"/> PointerInput -->
+        <!-- <Keyword   Value="0x40000000"/> ComponentHosting -->
+        <!-- <Keyword Value="0x2000000000"/> UserCrit telemetry -->
+        <!-- <Keyword Value="0x8000000000"/> DCompInput (RS5) -->
+      </Keywords>
+      <CaptureStateOnStart>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnStart>
+      <CaptureStateOnSave>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="8C416C79-D49B-4F01-A467-E56D3AA8234C" Id="Microsoft.Windows.Win32k.Perf" NonPagedMemory="true">
+      <Keywords>
+        <Keyword      Value="0xA045A6A000"/>
+        <!-- <Keyword       Value="0x2000"/> Focus -->
+        <!-- <Keyword       Value="0x8000"/> win32Power -->
+        <!-- <Keyword      Value="0x20000"/> UserActivity -->
+        <!-- <Keyword      Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword     Value="0x200000"/> ThreadInfo -->
+        <!-- <Keyword     Value="0x800000"/> MessagePumpInternalAndInput -->
+        <!-- <Keyword    Value="0x1000000"/> TouchInput -->
+        <!-- <Keyword   Value="0x04000000"/> PointerInput -->
+        <!-- <Keyword   Value="0x40000000"/> ComponentHosting -->
+        <!-- <Keyword Value="0x2000000000"/> UserCrit telemetry -->
+        <!-- <Keyword Value="0x8000000000"/> DCompInput (RS5) -->
+      </Keywords>
+      <CaptureStateOnStart>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnStart>
+      <CaptureStateOnSave>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="8C416C79-D49B-4F01-A467-E56D3AA8234C" Id="Microsoft.Windows.Win32k.UserCritPerf" NonPagedMemory="true">
+      <Keywords>
+        <Keyword      Value="0xA055A6A000"/>
+        <!-- <Keyword       Value="0x2000"/> Focus -->
+        <!-- <Keyword       Value="0x8000"/> win32Power -->
+        <!-- <Keyword      Value="0x20000"/> UserActivity -->
+        <!-- <Keyword      Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword     Value="0x200000"/> ThreadInfo -->
+        <!-- <Keyword     Value="0x800000"/> MessagePumpInternalAndInput -->
+        <!-- <Keyword    Value="0x1000000"/> TouchInput -->
+        <!-- <Keyword   Value="0x04000000"/> PointerInput -->
+        <!-- <Keyword   Value="0x10000000"/> UserCrit -->
+        <!-- <Keyword   Value="0x40000000"/> ComponentHosting -->
+        <!-- <Keyword Value="0x2000000000"/> UserCrit telemetry -->
+        <!-- <Keyword Value="0x8000000000"/> DCompInput (RS5) -->
+      </Keywords>
+      <CaptureStateOnStart>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnStart>
+      <CaptureStateOnSave>
+        <Keyword      Value="0xC0000"/>
+        <!-- <Keyword Value="0x40000"/> UIUnresponsiveness -->
+        <!-- <Keyword Value="0x80000"/> ThreadRundown -->
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Name="8C416C79-D49B-4F01-A467-E56D3AA8234C" Id="Microsoft.Windows.Win32k.UserCritPerf.Light" NonPagedMemory="true">
+      <Keywords>
+        <Keyword      Value="0x2010000000"/>
+        <!-- <Keyword   Value="0x10000000"/> UserCrit -->
+        <!-- <Keyword Value="0x2000000000"/> UserCrit telemetry -->
+      </Keywords>
+    </EventProvider>
+    <!-- MinUser Manifested (minuser.dll) -->
+    <EventProvider Name="7D30FE49-D67F-42D7-A360-9A0639EC5719" Id="Microsoft.Windows.OneCore.MinUser">
+      <Keywords>
+        <Keyword      Value="0x10001000"/>
+        <!-- <Keyword Value="0x00001000"/> Input -->
+        <!-- <Keyword Value="0x10000000"/> Performance -->
+      </Keywords>
+    </EventProvider>
+    <!-- Kernel Power -->
+    <EventProvider Name="331C3B3A-2005-44C2-AC5E-77220C37D6B4" Id="Microsoft-Windows-Kernel-Power">
+      <Keywords>
+        <Keyword      Value="0x44A4"/>
+        <!-- <Keyword    Value="0x4"/> Diagnostic -->
+        <!-- <Keyword   Value="0x20"/> Thermal -->
+        <!-- <Keyword   Value="0x80"/> PowerSetting -->
+        <!-- <Keyword  Value="0x400"/> DiagnosticLight -->
+        <!-- <Keyword Value="0x4000"/> TimerResolution (Vibranium) -->
+      </Keywords>
+      <CaptureStateOnSave Timeout="0">
+        <Keyword Value="0xA4" />
+      </CaptureStateOnSave>
+    </EventProvider>
+    <!-- Kernel PnP (used in Universal Tests only) -->
+    <EventProvider Name="9C205A39-1250-487D-ABD7-E831C6290539" Id="Microsoft.Windows.Kernel.PnP" NonPagedMemory="true" Stack="true"/>
+
+    <!-- Windows platform level providers -->
+
+    <!-- Interaction TraceLogging (ninput.dll) -->
+    <EventProvider Name="A7F923A4-8693-4876-92F4-4FF49791D3CF" Id="Microsoft.Windows.Ninput.Interaction"/>
+    <!-- DwmCore TraceLogging (dwmcore.dll) -->
+    <EventProvider Name="2BED2D8B-72D4-4D19-B0AC-DC27BF3B24EA" Id="Microsoft.Windows.Dwm.Tests"/>
+    <!-- DwmCore Interaction Performance Telemetry (dwmcore.dll) -->
+    <EventProvider Name="2729BE56-B41A-54BE-8C2A-8DA6127A8E38" Id="Microsoft.Windows.Dwm.Interaction"/>
+    <!-- DwmCore Manifested (dwmcore.dll) -->
+    <EventProvider Name="9E9BBA3C-2E38-40CB-99F4-9E8281425164" Id="Microsoft.Windows.Dwm.Core"/>
+    <EventProvider Name="9E9BBA3C-2E38-40CB-99F4-9E8281425164" Id="Microsoft.Windows.Dwm.Core.Input">
+      <Keywords>
+        <Keyword      Value="0x200000"/>
+        <!-- <Keyword Value="0x200000"/> DwmInput (RS5) -->
+      </Keywords>
+    </EventProvider>
+    <EventProvider Name="9E9BBA3C-2E38-40CB-99F4-9E8281425164" Id="Microsoft.Windows.Dwm.Core.Perf">
+      <Keywords>
+        <Keyword      Value="0x210000"/>
+        <!-- <Keyword Value="0x010000"/> FrameVisualization -->
+        <!-- <Keyword Value="0x200000"/> DwmInput (RS5) -->
+      </Keywords>
+    </EventProvider>
+    <!-- DwmCoreI TraceLogging (dwmcorei.dll) -->
+    <EventProvider Name="461B985D-2EBE-49C1-B506-BBF6C753A82B" Id="Microsoft.Windows.Dwm.LiftedTests"/>
+    <!-- DwmCoreI Interaction Performance Telemetry (dwmcorei.dll) -->
+    <EventProvider Name="07E4CEB9-D0CC-48A6-AF64-00F7A7D1198F" Id="Microsoft.Windows.Dwm.LiftedInteraction"/>
+    <!-- DwmCoreI Manifested (dwmcorei.dll) -->
+    <EventProvider Name="E750A202-A1AF-4357-9569-50AC14E4781E" Id="Microsoft.Windows.Dwm.CoreI"/>
+    <EventProvider Name="E750A202-A1AF-4357-9569-50AC14E4781E" Id="Microsoft.Windows.Dwm.CoreI.Input">
+      <Keywords>
+        <Keyword      Value="0x200000"/>
+        <!-- <Keyword Value="0x200000"/> DwmInput (RS5) -->
+      </Keywords>
+    </EventProvider>
+    <EventProvider Name="E750A202-A1AF-4357-9569-50AC14E4781E" Id="Microsoft.Windows.Dwm.CoreI.Perf">
+      <Keywords>
+        <Keyword      Value="0x210000"/>
+        <!-- <Keyword Value="0x010000"/> FrameVisualization -->
+        <!-- <Keyword Value="0x200000"/> DwmInput (RS5) -->
+      </Keywords>
+    </EventProvider>
+
+    <!-- ISM TraceLogging (ism.dll) -->
+    <EventProvider Name="973C694B-79A6-480E-89A5-C8C20745D461" Id="Microsoft.Windows.OneCore.MinInput"/>
+    <!-- WinUI WPP (windows.ui.dll) -->
+    <EventProvider Name="23E0D3D9-6334-4EDD-9C80-54D3D7CFA8DA" Id="Microsoft.Windows.WinUI.WPP">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- DManip WPP (directmanipulation.dll) -->
+    <EventProvider Name="CB18E7B3-F5B0-412F-9F18-5D87FEFCD662" Id="Microsoft.Windows.DirectManipulation.WPP">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <!-- DManip Manifested (directmanipulation.dll) -->
+    <EventProvider Name="5786E035-EF2D-4178-84F2-5A6BBEDBB947" Id="Microsoft.Windows.DirectManipulation"/>
+    <EventProvider Name="5786E035-EF2D-4178-84F2-5A6BBEDBB947" Id="Microsoft.Windows.DirectManipulation.Stacks" Stack="true"/>
+
+    <!-- DirectInk TraceLogging (Windows.UI.Input.Inking.dll) -->
+    <EventProvider Name="EE8FDBA0-14D6-50EC-A17A-33F388F21065" Id="Microsoft.Windows.DirectInk"/>
+
+    <!-- DComp Manifested (dcomp.dll) -->
+    <EventProvider Name="C44219D0-F344-11DF-A5E2-B307DFD72085" Id="Microsoft.Windows.DirectComposition">
+      <Keywords>
+        <Keyword      Value="0x00000080"/>
+        <!-- <Keyword Value="0x00000080"/> DCompInput (RS5) -->
+      </Keywords>
+    </EventProvider>
+    <EventProvider Name="C44219D0-F344-11DF-A5E2-B307DFD72085" Id="Microsoft.Windows.DirectComposition.Stacks" Stack="true">
+      <Keywords>
+        <Keyword      Value="0x00000080"/>
+        <!-- <Keyword Value="0x00000080"/> DCompInput (RS5) -->
+      </Keywords>
+    </EventProvider>
+    <!-- DwmRedir Manifested (dwmredir.dll) -->
+    <EventProvider Name="7D99F6A4-1BEC-4C09-9703-3AAA8148347F" Id="Microsoft.Windows.Dwm.Redir">
+      <Keywords>
+        <Keyword      Value="0x00000002"/>
+        <!-- <Keyword Value="0x00000002"/> DwmInput (RS5) -->
+      </Keywords>
+    </EventProvider>
+    <EventProvider Name="7D99F6A4-1BEC-4C09-9703-3AAA8148347F" Id="Microsoft.Windows.Dwm.Redir.Perf">
+      <Keywords>
+        <Keyword      Value="0x00000006"/>
+        <!-- <Keyword Value="0x00000002"/> DwmInput (RS5) -->
+        <!-- <Keyword Value="0x00000004"/> DwmInputPerf (19H1) -->
+      </Keywords>
+    </EventProvider>
+    <!-- Udwm Manifested (udwm.dll) -->
+    <EventProvider Name="A2D1C713-093B-43A7-B445-D09370EC9F47" Id="Microsoft.Windows.Dwm.Udwm">
+      <Keywords>
+        <Keyword      Value="0x00000002"/>
+        <!-- <Keyword Value="0x00000002"/> UdwmInput (19H1) -->
+      </Keywords>
+    </EventProvider>
+    <!-- XAML Manifested (windows.ui.xaml.dll) -->
+    <EventProvider Name="531A35AB-63CE-4BCF-AA98-F88C7A89E455" Id="Microsoft.Windows.XAML">
+      <Keywords>
+        <Keyword      Value="0x8000"/>
+        <!-- <Keyword Value="0x8000"/> Input -->
+      </Keywords>
+    </EventProvider>
+    <!-- WinUI Manifested (windows.ui.dll) -->
+    <EventProvider Name="A3D95055-34CC-4E4A-B99F-EC88F5370495" Id="Microsoft.Windows.CoreWindow"/>
+    <!-- HeatCore TraceLogging (heatcore.dll) -->
+    <EventProvider Name="55A5DC53-E24E-5B53-5B52-EA83A0CC4E0C" Id="Microsoft.Windows.Heat.HeatCore"/>
+    <!-- HeatCore Test TraceLogging (heatcore.dll) -->
+    <EventProvider Name="54225112-EAA1-5E29-C8F8-1CB9924D6049" Id="Microsoft.Windows.Heat.HeatCore.Test"/>
+    <!-- Heat Processor TraceLogging -->
+    <EventProvider Name="4AE53EDA-2033-5DD2-8850-99823083A9E5" Id="Microsoft.Windows.Heat.Processor"/>
+    <!-- CoreUIComponents Manifested (coreuicomponents.dll) -->
+    <EventProvider Name="A0B7550F-4E9A-4F03-AD41-B8042D06A2F7" Id="Microsoft.Windows.CoreUIComponents" />
+    <!-- NInput Manifested (ninput.dll) -->
+    <EventProvider Name="2C3E6D9F-8298-450F-8E5D-49B724F1216F" Id="Microsoft.Windows.NInput"/>
+    <!-- Text Input (textinputframework.dll) -->
+    <EventProvider Name="EBADF775-48AA-4BF3-8F8E-EC68D113C98E" Id="Microsoft.Windows.TextInput"/>
+    <!-- WCOS adapter app (wcosadapter.dll) -->
+    <EventProvider Name="D75DF9F1-5F3D-49D0-9D15-2A55BD1C012E" Id="Microsoft.Windows.Window.Event.Dispatcher"/>
+    <EventProvider Name="029769EE-ED48-4166-894E-357918A77E68" Id="Microsoft.Windows.WCOS.Adapter"/>
+    <!-- VAIL ProxyApp and RDP Core -->
+    <EventProvider Name="AE2E0F2E-A7E3-5C92-675A-5660B7D2F7E0" Id="Microsoft.Windows.ComposableShell.Components.ProxyAppClient"/>
+    <EventProvider Name="78F62820-37DC-5E89-F84D-ABA1B74BEA5C" Id="Microsoft.Windows.ComposableShell.Components.ProxyAppService"/>
+    <EventProvider Name="EF00584A-2655-462C-BC24-E7DE630E7FBF" Id="Microsoft.Windows.ComposableShell.Components.ProxyApp.LifeCycle"/>
+    <EventProvider Name="0291BFE0-82E7-5C74-C772-AB9829151C6B" Id="Microsoft.Windows.ComposableShell.Components.ProxyApp.Performance"/>
+    <EventProvider Name="5564A750-110E-5CC6-9B2A-8188AA7DCD68" Id="Microsoft.Windows.ComposableShell.Components.RDPCore"/>
+    <EventProvider Name="8A562815-F309-41FF-A52C-EC0764F8DAEE" Id="Microsoft.Windows.ComposableShell.Components.ViewHosting"/>
+    <EventProvider Name="614A8B00-6E01-4881-BBD8-521214ABA0A3" Id="Microsoft.Windows.ComposableShell.Products.ModernUX"/>
+    <EventProvider Name="C0D4E2EE-2A06-4735-9E0A-8DEE84098CEA" Id="Microsoft.Windows.Shell.AilPositioner"/>
+    <!-- Minuser extension (Minuser.dll) -->
+    <EventProvider Name="9956C4CC-7B21-4D55-B22D-3A0EA2BDDEB9" Id="Microsoft.Windows.OneCore.MinUserExt"/>
+    <!-- WindowManagement -->
+    <EventProvider Name="CF5838D7-9FDC-5907-A62C-ABD41DE9D862" Id="Microsoft.OneCore.WindowManagement"/>
+    <EventProvider Name="329CC1E5-3D02-4C6F-B411-0299BE591CD7" Id="Microsoft.OneCore.WindowManagementApi"/>
+    <!-- CoreMessaging -->
+    <EventProvider Name="DE5A9D0A-C195-504D-0175-039AC1243837" Id="Microsoft.Windows.CoreMessaging.CoreMessagingK"/>
+    <!-- DXG Kernel -->
+    <EventProvider Name="802EC45A-1E99-4B83-9920-87C98277BA9D" Id="Microsoft.Windows.Dxgkrnl"/>
+    <!-- IME -->
+    <EventProvider Name="89DB9EAC-5750-580C-39D6-6978396822DD" Id="Microsoft-Windows-TextInput-Gip" Level="5"/>
+    <EventProvider Name="2D66BB8D-2A6B-5A2D-A09C-4F57A1776BD1" Id="Microsoft-Windows-TextInput-ChsIme"/>
+    <EventProvider Name="31BCAC7F-4AB8-47A1-B73A-A161EE68D585" Id="Microsoft-Windows-IME-JPAPI"/>
+    <EventProvider Name="DBC388BC-89C2-4FE0-B71F-6E4881FB575C" Id="Microsoft-Windows-IME-JPLMP"/>
+    <EventProvider Name="3AD571F3-BDAE-4942-8733-4D1B85870A1E" Id="Microsoft-Windows-IME-JPPRED"/>  
+    <EventProvider Name="06404639-EC4F-56D8-F82E-49BF6AD1B96A" Id="Microsoft-Windows-Desktop-TextInput-BopomofoIme"/>
+    <EventProvider Name="2593BDF1-313B-5C29-355C-6065BA331797" Id="Microsoft-Windows-Desktop-TextInput-ImeCommon"/>
+    <EventProvider Name="68259FFF-CE2B-4A91-8DF0-9656CDB7A4D6" Id="Microsoft-Windows-Desktop-TextInput-MSCand20"/>
+    <EventProvider Name="47A8EA0F-BE9F-5A94-1586-5DED19D57C3D" Id="Microsoft-Windows-Desktop-TextInput-JapaneseIme"/>
+    <EventProvider Name="4B7BD959-BFEA-5953-583C-FB7BF825BC92" Id="Microsoft-Windows-Desktop-TextInput-ChtIme"/>
+    <EventProvider Name="FF5023D9-8341-5DFB-3C33-17A1AB76A426" Id="Microsoft-Windows-Shell-CandidateWindow"/>
+    <EventProvider Name="73AE0EC4-37FC-4B10-92C0-7F6D9D0539B9" Id="Microsoft-Windows-TextInput-ExpressiveInput"/>
+    <EventProvider Name="D49F5FDD-C4AB-47BD-BD68-A9A8688A92AB" Id="Microsoft-Windows-TextInput-Gip-Perf"/>
+    <EventProvider Name="6BE754E7-F231-4DB7-A9B6-3720F91A7AD2" Id="Microsoft-Windows-TextInput-Gip-LegacyBopomofo-Perf"/>
+    <EventProvider Name="04708A84-8C97-4B32-A8A9-2762C83573C0" Id="Microsoft-IPX-Core"/>
+    <EventProvider Name="4FBA1227-F606-4E5F-B9E8-FAB9AB5740F3" Id="Microsoft-Windows-TSF-msctf" Level="5"/>
+    <EventProvider Name="7B434BC1-8EFF-41A3-87E9-5D8AF3099784" Id="Microsoft-Windows-Shell-KeyboardHosting-ShellKeyboardManager"/>
+    <EventProvider Name="5C3E3AA8-3BA4-43CD-A7DE-3BF5F70F9CA4" Id="Microsoft-Windows-Shell-TextInput-InputPanel"/>
+    <EventProvider Name="C3AF4B8A-C24F-56D4-CE67-DEF9F522A0DD" Id="Microsoft-Windows-Shell-TouchKeyboardExperience"/>
+    <EventProvider Name="34C25D46-D194-5918-C399-D3641F0C609D" Id="Microsoft-Windows-ComposableShell-Components-InputHost"/>
+    <EventProvider Name="68396F5F-E685-5C1B-3181-A17CF8D96FA6" Id="Microsoft-Windows-Desktop-TextInput-TouchKeyboard"/>
+
+    <!--From GTP+AppLifecycle+CPI (10439)-->
+    <EventProvider Id="EventProvider_Microsoft-Windows-Kernel-Memory_0_0_68_0_0_0" Level="0" Name="d1d93ef7-e1f2-4f45-9943-03d245fe6c00" NonPagedMemory="true" EventKey="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>    
+    <EventProvider Id="EventProvider_PerfTrack" Name="PerfTrack" NonPagedMemory="true" Level="4"/>
+    <EventProvider Id="EventProvider_UTC" Name="UTC" NonPagedMemory="true" Level="4"/>
+    <EventProvider Id="EventProvider_TelAssert" Name="6d1b249d-131b-468a-899b-fb0ad9551772" NonPagedMemory="true" Level="5" Stack="true"/>
+    <EventProvider Id="EventProvider_Microsoft-Windows-Diagnostics-PerfTrack_1114112_4_4491_1_0_0" Level="4" Name="030f2f57-abd0-4427-bcf1-3a3587d7dc7d" NonPagedMemory="true" EventKey="true">
+      <Keywords>
+        <Keyword Value="0x110000"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-Diagnostics-PerfTrack-Counters_0_0_4491_2_0_R" Level="0" Name="c06ed57a-a7bd-42d7-b5ff-77a9dec5732d" NonPagedMemory="true" EventKey="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+      <CaptureStateOnSave Timeout="0">
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-WindowsPhone-CoreUIComponents_4294967295_4_4491_41_0_0" Level="4" Name="a0b7550f-4e9a-4f03-ad41-b8042d06a2f7" NonPagedMemory="true" EventKey="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-AntiMalware-Engine_0_0_4491_4_0_0" Level="0" Name="0a002690-3839-4e3a-b3b6-96d8df868d99" NonPagedMemory="true" EventKey="true">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-Kernel-Process_16_0_68_1_0_0" Name="22fb2cd6-0e7b-422b-a0c7-2fad1fd0e716" NonPagedMemory="true" Level="0" EventKey="true">
+      <Keywords>
+        <Keyword Value="0x3010" />
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-Kernel-Processor-Power_707_4_4871_47_0_0" Name="0f67e49f-fe51-4e9f-b490-6f2948cc6027" NonPagedMemory="true" Level="4" EventKey="true">
+      <Keywords>
+         <Keyword Value="0x2C7" />
+       </Keywords>
+     </EventProvider>
+     <EventProvider Id="EventProvider_Microsoft-Windows-Kernel-Processor-Power_0_1_CaptureState" Name="0f67e49f-fe51-4e9f-b490-6f2948cc6027" Level="0" CaptureStateOnly="true">
+      <CaptureStateOnSave Timeout="0">
+         <Keyword Value="0" />
+      </CaptureStateOnSave>
+    </EventProvider>
+	<EventProvider Id="Microsoft.Windows.Health.TestInProduction" Name="50109FBD-6D85-5815-731E-C907ECA1607B" NonPagedMemory="true" Level="5" EventKey="true">
+		<Keywords>
+			<Keyword Value="0xA" />
+			<!-- <Keyword Value="0x0000000000000002"/> TIP_KEYWORD_PERFTRACK -->
+			<!-- <Keyword Value="0x0000000000000008"/> TIP_KEYWORD_KEYMOMENT -->
+		</Keywords>
+	</EventProvider>
+	<EventProvider Id="screenrecordingscript" Name="3d3767d6-c0ba-5afc-4ba4-a000d156b6c6">
+	</EventProvider>
+  <EventProvider Id="ScreenRecordingTool" Name="12345678-1234-1234-1234-123456789ABC">
+  </EventProvider>
+  <EventProvider Id="screenrecorder" Name="fe8fc3d0-1e6a-42f2-be28-9f8a0fcf7b04">
+	</EventProvider>
+	  
+    <Profile Id="Core.Verbose.Memory" Name="Core" Description="Core" DetailLevel="Verbose" LoggingMode="Memory">
+      <Collectors>
+
+        <SystemCollectorId Value="Standard_SystemCollector">
+          <SystemProviderId Value="WinResp_SystemProvider"/>
+          <HardwareCounterId Value="HardwareCounter_General_Mobile_+_CPI"/>
+        </SystemCollectorId>
+
+        <EventCollectorId Value="Standard_EventCollector_Core">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.InputCore.TraceLogging"/>
+            <EventProviderId Value="Microsoft.Windows.InputCore.Manifested"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Kernel-Memory_0_0_68_0_0_0"/>
+            <EventProviderId Value="EventProvider_PerfTrack"/>
+            <EventProviderId Value="EventProvider_UTC"/>
+            <EventProviderId Value="EventProvider_TelAssert"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Diagnostics-PerfTrack_1114112_4_4491_1_0_0"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Diagnostics-PerfTrack-Counters_0_0_4491_2_0_R"/>
+            <EventProviderId Value="EventProvider_Microsoft-WindowsPhone-CoreUIComponents_4294967295_4_4491_41_0_0"/>
+            <EventProviderId Value="EventProvider_Microsoft-AntiMalware-Engine_0_0_4491_4_0_0"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Kernel-Process_16_0_68_1_0_0"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Kernel-Processor-Power_707_4_4871_47_0_0"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Kernel-Processor-Power_0_1_CaptureState"/>
+			<EventProviderId Value="Microsoft.Windows.Health.TestInProduction"/>
+			  
+		  </EventProviders>
+        </EventCollectorId>
+
+        <EventCollectorId Value="Standard_EventCollector_HID">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.HID.HidClass"/>
+            <EventProviderId Value="Microsoft.Windows.HID.I2C"/>
+            <EventProviderId Value="Microsoft.Windows.HID.SPI"/>
+            <EventProviderId Value="Microsoft.Windows.HID.USB"/>
+            <EventProviderId Value="Microsoft.Windows.HID.BTH"/>
+            <EventProviderId Value="Microsoft.Windows.HID.GATT"/>
+            <EventProviderId Value="Microsoft.Windows.HID.kbd"/>
+            <EventProviderId Value="Microsoft.Windows.HID.kbdclass"/>
+            <EventProviderId Value="Microsoft.Windows.HID.mou"/>
+            <EventProviderId Value="Microsoft.Windows.HID.mouclass"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.MtConfig"/>
+          </EventProviders>
+        </EventCollectorId>
+
+        <EventCollectorId Value="Standard_EventCollector_Transport">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.HID.Buttonconverter"/>
+            <EventProviderId Value="Microsoft.Windows.HID.HidInterrupt"/>
+            <EventProviderId Value="Microsoft.Windows.HID.GPIO"/>
+            <EventProviderId Value="Microsoft.Windows.HID.VHF"/>
+            <EventProviderId Value="Microsoft.Windows.HID.SpbCx"/>
+            <EventProviderId Value="Microsoft.Windows.USB.UsbHub3"/>
+            <EventProviderId Value="Microsoft.Windows.USB.ucx01000"/>
+            <EventProviderId Value="Microsoft.Windows.USB.XHCI"/>
+            <EventProviderId Value="Microsoft.Windows.USB.CCGP"/>
+            <EventProviderId Value="Microsoft.Windows.USB.Hub"/>
+            <EventProviderId Value="Microsoft.Windows.USB.Port"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.I8042prt"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.msgpioclx"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.bthport"/>
+            <EventProviderId Value="Microsoft.Windows.Power.DeviceProblems"/>
+          </EventProviders>
+        </EventCollectorId>
+
+        <EventCollectorId Value="Standard_EventCollector_Foundation">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.RIM_RS1.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kBase.Input"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kBase.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kMin.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kFull.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kNs.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32k.TraceLogging"/>
+            <EventProviderId Value="Microsoft-Windows-Win32k"/>
+            <EventProviderId Value="Microsoft.Windows.OneCore.MinUser"/>
+            <EventProviderId Value="Microsoft-Windows-Kernel-Power"/>
+          </EventProviders>
+        </EventCollectorId>
+
+        <EventCollectorId Value="Standard_EventCollector_Platform">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.Ninput.Interaction"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Tests"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.LiftedTests"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Interaction"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.LiftedInteraction"/>
+            <EventProviderId Value="Microsoft.Windows.OneCore.MinInput"/>
+            <EventProviderId Value="Microsoft.Windows.WinUI.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.DirectManipulation.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.DirectManipulation"/>
+            <EventProviderId Value="Microsoft.Windows.DirectInk"/>
+            <EventProviderId Value="Microsoft.Windows.DirectComposition"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Redir.Perf"/>  <!--This is a difference from the default InputCore and allows us to look at issues like 2 mouse cursors-->
+            <EventProviderId Value="Microsoft.Windows.XAML"/>
+            <EventProviderId Value="Microsoft.Windows.CoreWindow"/>
+            <EventProviderId Value="Microsoft.Windows.Heat.HeatCore"/>
+            <EventProviderId Value="Microsoft.Windows.Heat.HeatCore.Test"/>
+            <EventProviderId Value="Microsoft.Windows.Heat.Processor"/>
+            <EventProviderId Value="Microsoft.Windows.CoreUIComponents"/>
+            <EventProviderId Value="Microsoft.Windows.NInput"/>
+            <EventProviderId Value="Microsoft.Windows.TextInput"/>
+            <EventProviderId Value="Microsoft.Windows.WCOS.Adapter"/>
+            <EventProviderId Value="Microsoft.Windows.ComposableShell.Components.ProxyAppClient"/>
+            <EventProviderId Value="Microsoft.Windows.ComposableShell.Components.ProxyAppService"/>
+            <EventProviderId Value="Microsoft.Windows.ComposableShell.Components.RDPCore"/>
+            <EventProviderId Value="Microsoft.Windows.OneCore.MinUserExt"/>
+            <EventProviderId Value="Microsoft.OneCore.WindowManagement"/>
+            <EventProviderId Value="Microsoft.OneCore.WindowManagementApi"/>
+          </EventProviders>
+        </EventCollectorId>
+
+        <EventCollectorId Value="Standard_EventCollector_Misc">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Core"/>
+            <EventProviderId Value="Microsoft.Windows.CoreMessaging.CoreMessagingK"/>
+            <EventProviderId Value="Microsoft.Windows.ComposableShell.Components.ProxyApp.Performance"/>
+            <EventProviderId Value="Microsoft.Windows.Dxgkrnl"/>
+            <EventProviderId Value="Microsoft.Windows.ComposableShell.Components.ProxyApp.LifeCycle"/>
+            <EventProviderId Value="Microsoft.Windows.ComposableShell.Products.ModernUX"/>
+            <EventProviderId Value="Microsoft.Windows.ComposableShell.Components.ViewHosting"/>
+            <EventProviderId Value="Microsoft.Windows.Shell.AilPositioner"/>
+            <EventProviderId Value="Microsoft.Windows.Window.Event.Dispatcher"/>
+			      <EventProviderId Value="screenrecordingscript"/>
+            <EventProviderId Value="ScreenRecordingTool"/>
+            <EventProviderId Value="screenrecorder"/>
+          </EventProviders>
+        </EventCollectorId>
+
+      </Collectors>
+
+      <TraceMergeProperties>
+        <TraceMergeProperty Id="InputMerge_Default" Name="InputMerge_Default">
+          <DeletePreMergedTraceFiles Value="true" />
+          <FileCompression Value="true" />
+          <InjectOnly Value="false" />
+          <SkipMerge Value="false" />
+          <CustomEvents>
+            <CustomEvent Value="ImageId" />
+            <CustomEvent Value="BuildInfo" />
+            <CustomEvent Value="VolumeMapping" />
+            <CustomEvent Value="EventMetadata" />
+            <CustomEvent Value="PerfTrackMetadata" />
+            <CustomEvent Value="WinSAT" />
+            <CustomEvent Value="NetworkInterface" />
+          </CustomEvents>
+        </TraceMergeProperty>
+      </TraceMergeProperties>
+
+    </Profile>
+    <Profile Id="Core.Verbose.File" Base="Core.Verbose.Memory" Name="Core" Description="Core" DetailLevel="Verbose" LoggingMode="File"/>
+
+    <Profile Id="Perf.Verbose.Memory" Name="Perf" Description="Perf" DetailLevel="Verbose" LoggingMode="Memory">
+      <Collectors>
+
+        <SystemCollectorId Value="Perf_SystemCollector">
+          <SystemProviderId Value="WinResp_SystemProvider"/>
+        </SystemCollectorId>
+
+        <EventCollectorId Value="Perf_EventCollector">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.InputCore.TraceLogging.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.InputCore.Manifested.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.Win32k.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Core.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Redir.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kBase.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kMin.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kFull.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kNs.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.CoreUIComponents"/>
+
+            <EventProviderId Value="Microsoft.Windows.HID.HidClass"/>
+            <EventProviderId Value="Microsoft.Windows.HID.I2C"/>
+            <EventProviderId Value="Microsoft.Windows.HID.SPI"/>
+            <EventProviderId Value="Microsoft.Windows.HID.USB"/>
+            <EventProviderId Value="Microsoft.Windows.HID.BTH"/>
+            <EventProviderId Value="Microsoft.Windows.HID.GATT"/>
+            <EventProviderId Value="Microsoft.Windows.HID.kbd"/>
+            <EventProviderId Value="Microsoft.Windows.HID.kbdclass"/>
+            <EventProviderId Value="Microsoft.Windows.HID.mou"/>
+            <EventProviderId Value="Microsoft.Windows.HID.mouclass"/>
+            <EventProviderId Value="Microsoft.Windows.HID.Buttonconverter"/>
+            <EventProviderId Value="Microsoft.Windows.HID.HidInterrupt"/>
+            <EventProviderId Value="Microsoft.Windows.HID.GPIO"/>
+            <EventProviderId Value="Microsoft.Windows.HID.VHF"/>
+            <EventProviderId Value="Microsoft.Windows.HID.SpbCx"/>
+            <EventProviderId Value="Microsoft.Windows.USB.UsbHub3"/>
+            <EventProviderId Value="Microsoft.Windows.USB.ucx01000"/>
+            <EventProviderId Value="Microsoft.Windows.USB.XHCI"/>
+            <EventProviderId Value="Microsoft.Windows.USB.CCGP"/>
+            <EventProviderId Value="Microsoft.Windows.USB.Hub"/>
+            <EventProviderId Value="Microsoft.Windows.USB.Port"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.MtConfig"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.I8042prt"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.msgpioclx"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.bthport"/>
+            <EventProviderId Value="Microsoft.Windows.Power.DeviceProblems"/>
+          </EventProviders>
+        </EventCollectorId>
+
+      </Collectors>
+
+      <TraceMergeProperties>
+        <TraceMergeProperty Id="InputMerge_Default" Name="InputMerge_Default">
+          <DeletePreMergedTraceFiles Value="true" />
+          <FileCompression Value="true" />
+          <InjectOnly Value="false" />
+          <SkipMerge Value="false" />
+          <CustomEvents>
+            <CustomEvent Value="ImageId" />
+            <CustomEvent Value="BuildInfo" />
+            <CustomEvent Value="VolumeMapping" />
+            <CustomEvent Value="EventMetadata" />
+            <CustomEvent Value="PerfTrackMetadata" />
+            <CustomEvent Value="WinSAT" />
+            <CustomEvent Value="NetworkInterface" />
+          </CustomEvents>
+        </TraceMergeProperty>
+      </TraceMergeProperties>
+
+    </Profile>
+    <Profile Id="Perf.Verbose.File" Name="Perf" Base="Perf.Verbose.Memory" Description="Perf" DetailLevel="Verbose" LoggingMode="File"/>
+
+    <Profile Id="Perf.Light.Memory" Name="Perf" Description="Perf" DetailLevel="Light" LoggingMode="Memory">
+      <Collectors>
+
+        <SystemCollectorId Value="Perf_SystemCollector">
+          <SystemProviderId Value="WinResp_SystemProvider"/>
+        </SystemCollectorId>
+
+      </Collectors>
+
+      <TraceMergeProperties>
+        <TraceMergeProperty Id="InputMerge_Default" Name="InputMerge_Default">
+          <DeletePreMergedTraceFiles Value="true" />
+          <FileCompression Value="true" />
+          <InjectOnly Value="false" />
+          <SkipMerge Value="false" />
+          <CustomEvents>
+            <CustomEvent Value="ImageId" />
+            <CustomEvent Value="BuildInfo" />
+            <CustomEvent Value="VolumeMapping" />
+            <CustomEvent Value="EventMetadata" />
+            <CustomEvent Value="PerfTrackMetadata" />
+            <CustomEvent Value="WinSAT" />
+            <CustomEvent Value="NetworkInterface" />
+          </CustomEvents>
+        </TraceMergeProperty>
+      </TraceMergeProperties>
+
+    </Profile>
+
+    <Profile Id="UserCritPerf.Verbose.Memory" Name="UserCritPerf" Description="UserCritPerf" DetailLevel="Verbose" LoggingMode="Memory">
+      <Collectors>
+
+        <SystemCollectorId Value="Perf_SystemCollector">
+          <SystemProviderId Value="WinResp_SystemProvider"/>
+          <HardwareCounterId Value="HardwareCounter_General_Mobile_+_CPI"/>
+        </SystemCollectorId>
+
+        <EventCollectorId Value="Perf_EventCollector">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.InputCore.TraceLogging.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.InputCore.Manifested.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.Win32k.UserCritPerf"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Core.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Redir.Perf"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kBase.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kMin.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kFull.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kNs.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.CoreUIComponents"/>
+            <EventProviderId Value="Microsoft.Windows.HID.HidClass"/>
+          </EventProviders>
+        </EventCollectorId>
+
+      </Collectors>
+
+      <TraceMergeProperties>
+        <TraceMergeProperty Id="InputMerge_Default" Name="InputMerge_Default">
+          <DeletePreMergedTraceFiles Value="true" />
+          <FileCompression Value="true" />
+          <InjectOnly Value="false" />
+          <SkipMerge Value="false" />
+          <CustomEvents>
+            <CustomEvent Value="ImageId" />
+            <CustomEvent Value="BuildInfo" />
+            <CustomEvent Value="VolumeMapping" />
+            <CustomEvent Value="EventMetadata" />
+            <CustomEvent Value="PerfTrackMetadata" />
+            <CustomEvent Value="WinSAT" />
+            <CustomEvent Value="NetworkInterface" />
+          </CustomEvents>
+        </TraceMergeProperty>
+      </TraceMergeProperties>
+
+    </Profile>
+    <Profile Id="UserCritPerf.Verbose.File" Name="UserCritPerf" Base="UserCritPerf.Verbose.Memory" Description="UserCritPerf" DetailLevel="Verbose" LoggingMode="File"/>
+
+    <Profile Id="UserCritPerf.Light.Memory" Name="UserCritPerf" Description="UserCritPerf" DetailLevel="Light" LoggingMode="Memory">
+      <Collectors>
+
+        <SystemCollectorId Value="Perf_SystemCollector">
+          <SystemProviderId Value="WinResp_SystemProvider"/>
+        </SystemCollectorId>
+
+        <EventCollectorId Value="Perf_EventCollector">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.Win32k.UserCritPerf.Light"/>
+          </EventProviders>
+        </EventCollectorId>
+
+      </Collectors>
+
+      <TraceMergeProperties>
+        <TraceMergeProperty Id="InputMerge_Default" Name="InputMerge_Default">
+          <DeletePreMergedTraceFiles Value="true" />
+          <FileCompression Value="true" />
+          <InjectOnly Value="false" />
+          <SkipMerge Value="false" />
+          <CustomEvents>
+            <CustomEvent Value="ImageId" />
+            <CustomEvent Value="BuildInfo" />
+            <CustomEvent Value="VolumeMapping" />
+            <CustomEvent Value="EventMetadata" />
+            <CustomEvent Value="PerfTrackMetadata" />
+            <CustomEvent Value="WinSAT" />
+            <CustomEvent Value="NetworkInterface" />
+          </CustomEvents>
+        </TraceMergeProperty>
+      </TraceMergeProperties>
+
+    </Profile>
+
+    <Profile Id="Stacks.Verbose.Memory" Name="Stacks" Description="Stacks" DetailLevel="Verbose" LoggingMode="Memory">
+      <Collectors>
+
+        <SystemCollectorId Value="Perf_SystemCollector">
+          <SystemProviderId Value="WinResp_SystemProvider"/>
+          <HardwareCounterId Value="HardwareCounter_General_Mobile_+_CPI"/>
+        </SystemCollectorId>
+
+        <EventCollectorId Value="Perf_EventCollector">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.InputCore.TraceLogging.Stacks"/>
+            <EventProviderId Value="Microsoft.Windows.InputCore.Manifested.Stacks"/>
+            <EventProviderId Value="Microsoft-Windows-Win32k"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kBase.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kMin.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kFull.WPP"/>
+          </EventProviders>
+        </EventCollectorId>
+
+      </Collectors>
+
+      <TraceMergeProperties>
+        <TraceMergeProperty Id="InputMerge_Default" Name="InputMerge_Default">
+          <DeletePreMergedTraceFiles Value="true" />
+          <FileCompression Value="true" />
+          <InjectOnly Value="false" />
+          <SkipMerge Value="false" />
+          <CustomEvents>
+            <CustomEvent Value="ImageId" />
+            <CustomEvent Value="BuildInfo" />
+            <CustomEvent Value="VolumeMapping" />
+            <CustomEvent Value="EventMetadata" />
+            <CustomEvent Value="PerfTrackMetadata" />
+            <CustomEvent Value="WinSAT" />
+            <CustomEvent Value="NetworkInterface" />
+          </CustomEvents>
+        </TraceMergeProperty>
+      </TraceMergeProperties>
+
+    </Profile>
+
+    <Profile Id="UIF.Verbose.Memory" Name="UIF" Description="UIF" DetailLevel="Verbose" LoggingMode="Memory">
+      <Collectors>
+
+        <SystemCollectorId Value="UIF_SystemCollector">
+          <SystemProviderId Value="UIF_SystemProvider"/>
+        </SystemCollectorId>
+
+        <EventCollectorId Value="UIF_EventCollector_Core">
+          <EventProviders>
+            <EventProviderId Value="Microsoft.Windows.Fundamentals.UserInitiatedFeedback"/>
+
+            <!-- General Input Provider -->
+            <EventProviderId Value="Microsoft.Windows.InputCore.TraceLogging.UIF"/>
+            <EventProviderId Value="Microsoft.Windows.InputCore.Manifested.UIF"/>
+
+            <!-- HID Providers -->
+            <EventProviderId Value="Microsoft.Windows.HID.HidClass"/>
+            <EventProviderId Value="Microsoft.Windows.HID.I2C"/>
+            <EventProviderId Value="Microsoft.Windows.HID.SPI"/>
+            <EventProviderId Value="Microsoft.Windows.HID.USB"/>
+            <EventProviderId Value="Microsoft.Windows.HID.BTH"/>
+            <EventProviderId Value="Microsoft.Windows.HID.GATT"/>
+            <EventProviderId Value="Microsoft.Windows.HID.kbd"/>
+            <EventProviderId Value="Microsoft.Windows.HID.kbdclass"/>
+            <EventProviderId Value="Microsoft.Windows.HID.mou"/>
+            <EventProviderId Value="Microsoft.Windows.HID.mouclass"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.MtConfig"/>
+
+            <!-- Transport Layer Providers -->
+            <EventProviderId Value="Microsoft.Windows.HID.Buttonconverter"/>
+            <EventProviderId Value="Microsoft.Windows.HID.HidInterrupt"/>
+            <EventProviderId Value="Microsoft.Windows.HID.GPIO"/>
+            <EventProviderId Value="Microsoft.Windows.HID.VHF"/>
+            <EventProviderId Value="Microsoft.Windows.HID.SpbCx"/>
+            <EventProviderId Value="Microsoft.Windows.USB.UsbHub3"/>
+            <EventProviderId Value="Microsoft.Windows.USB.ucx01000"/>
+            <EventProviderId Value="Microsoft.Windows.USB.XHCI"/>
+            <EventProviderId Value="Microsoft.Windows.USB.CCGP"/>
+            <EventProviderId Value="Microsoft.Windows.USB.Hub"/>
+            <EventProviderId Value="Microsoft.Windows.USB.Port"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.I8042prt"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.msgpioclx"/>
+            <EventProviderId Value="Microsoft.Windows.Drivers.bthport"/>
+            <EventProviderId Value="Microsoft.Windows.Power.DeviceProblems"/>
+          </EventProviders>
+        </EventCollectorId>
+
+        <EventCollectorId Value="UIF_EventCollector_PlatformAndFoundation">
+          <EventProviders>
+            <!-- Foundation Providers -->
+            <EventProviderId Value="Microsoft.Windows.RIM_RS1.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kBase.Input"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kBase.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kMin.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kFull.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32kNs.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.Win32k.TraceLogging"/>
+            <EventProviderId Value="Microsoft.Windows.Win32k.UIF"/>
+            <EventProviderId Value="Microsoft.Windows.OneCore.MinUser"/>
+            <EventProviderId Value="Microsoft-Windows-Kernel-Power"/>
+            <EventProviderId Value="Microsoft.Windows.WCOS.Adapter"/>
+            <EventProviderId Value="Microsoft.Windows.OneCore.MinUserExt"/>
+
+            <!-- Platform Providers -->
+            <EventProviderId Value="Microsoft.Windows.Ninput.Interaction"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Tests"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.LiftedTests"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Interaction"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.LiftedInteraction"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Core.Input"/>
+            <EventProviderId Value="Microsoft.Windows.OneCore.MinInput"/>
+            <EventProviderId Value="Microsoft.Windows.WinUI.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.DirectManipulation.WPP"/>
+            <EventProviderId Value="Microsoft.Windows.DirectManipulation"/>
+            <EventProviderId Value="Microsoft.Windows.DirectInk"/>
+            <EventProviderId Value="Microsoft.Windows.DirectComposition"/>
+            <EventProviderId Value="Microsoft.Windows.Dwm.Redir"/>
+            <EventProviderId Value="Microsoft.Windows.XAML"/>
+            <EventProviderId Value="Microsoft.Windows.CoreWindow"/>
+            <EventProviderId Value="Microsoft.Windows.Heat.HeatCore"/>
+            <EventProviderId Value="Microsoft.Windows.Heat.HeatCore.Test"/>
+            <EventProviderId Value="Microsoft.Windows.Heat.Processor"/>
+            <EventProviderId Value="Microsoft.Windows.CoreUIComponents"/>
+            <EventProviderId Value="Microsoft.Windows.NInput"/>
+            <EventProviderId Value="Microsoft.Windows.TextInput"/>
+
+            <!-- IME Providers -->
+            <EventProviderId Value="Microsoft-Windows-TextInput-Gip"/>
+            <EventProviderId Value="Microsoft-Windows-TextInput-ChsIme"/>
+            <EventProviderId Value="Microsoft-Windows-IME-JPAPI"/>
+            <EventProviderId Value="Microsoft-Windows-IME-JPLMP"/>
+            <EventProviderId Value="Microsoft-Windows-IME-JPPRED"/>
+            <EventProviderId Value="Microsoft-Windows-Desktop-TextInput-BopomofoIme"/>
+            <EventProviderId Value="Microsoft-Windows-Desktop-TextInput-ImeCommon"/>
+            <EventProviderId Value="Microsoft-Windows-Desktop-TextInput-MSCand20"/>
+            <EventProviderId Value="Microsoft-Windows-Desktop-TextInput-JapaneseIme"/>
+            <EventProviderId Value="Microsoft-Windows-Desktop-TextInput-ChtIme"/>
+            <EventProviderId Value="Microsoft-Windows-Shell-CandidateWindow"/>
+            <EventProviderId Value="Microsoft-Windows-TextInput-ExpressiveInput"/>
+            <EventProviderId Value="Microsoft-Windows-TextInput-Gip-Perf"/>
+            <EventProviderId Value="Microsoft-Windows-TextInput-Gip-LegacyBopomofo-Perf"/>
+            <EventProviderId Value="Microsoft-IPX-Core"/>
+            <EventProviderId Value="Microsoft-Windows-TSF-msctf"/>
+            <EventProviderId Value="Microsoft-Windows-Shell-KeyboardHosting-ShellKeyboardManager"/>
+            <EventProviderId Value="Microsoft-Windows-Shell-TextInput-InputPanel"/>
+            <EventProviderId Value="Microsoft-Windows-Shell-TouchKeyboardExperience"/>
+            <EventProviderId Value="Microsoft-Windows-ComposableShell-Components-InputHost"/>
+            <EventProviderId Value="Microsoft-Windows-Desktop-TextInput-TouchKeyboard"/>
+              
+          </EventProviders>
+        </EventCollectorId>
+
+      </Collectors>
+
+      <TraceMergeProperties>
+        <TraceMergeProperty Id="InputMerge_Default" Name="InputMerge_Default">
+          <DeletePreMergedTraceFiles Value="true" />
+          <FileCompression Value="true" />
+          <InjectOnly Value="false" />
+          <SkipMerge Value="false" />
+          <CustomEvents>
+            <CustomEvent Value="ImageId" />
+            <CustomEvent Value="BuildInfo" />
+            <CustomEvent Value="VolumeMapping" />
+            <CustomEvent Value="EventMetadata" />
+            <CustomEvent Value="PerfTrackMetadata" />
+            <CustomEvent Value="NetworkInterface" />
+          </CustomEvents>
+        </TraceMergeProperty>
+      </TraceMergeProperties>
+
+    </Profile>
+
+  </Profiles>
+
+</WindowsPerformanceRecorder>
